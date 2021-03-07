@@ -15,24 +15,11 @@ import java.util.List;
 
 public class ExcelReadHelper {
 
-//    public static String TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-//    static String[] HEADERs = { "column1", "column2", "column3", "column4","column5",
-//                                "column6","column7","column8","column9","column10"  };
-
-
-//    public static boolean hasExcelFormat(MultipartFile file) {
-//
-//        if (!TYPE.equals(file.getContentType())) {
-//            return false;
-//        }
-//
-//        return true;
-//    }
-
     public static List<UserFileRow> excelToUserFileRowObject(InputStream is) {
         try {
             Workbook workbook = new XSSFWorkbook(is);
 
+            //Can be modified to get data fron multiple sheets in excel file
             Sheet sheet = workbook.getSheetAt(0);
             Iterator<Row> rows = sheet.iterator();
 
@@ -42,7 +29,7 @@ public class ExcelReadHelper {
             while (rows.hasNext()) {
                 Row currentRow = rows.next();
 
-                // skip header
+                // Skip header
                 if (rowNumber == 0) {
                     rowNumber++;
                     continue;
@@ -53,6 +40,7 @@ public class ExcelReadHelper {
                 UserFileRow userFile = new UserFileRow();
 
                 int cellIndex = 0;
+
                 while (cellsInRow.hasNext()) {
                     Cell currentCell = cellsInRow.next();
 

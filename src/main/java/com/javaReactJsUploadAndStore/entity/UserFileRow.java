@@ -1,18 +1,15 @@
 package com.javaReactJsUploadAndStore.entity;
-
-
-import org.hibernate.annotations.GenericGenerator;
-
 import javax.persistence.*;
-import java.sql.Clob;
-
 import static javax.persistence.GenerationType.SEQUENCE;
+
+//Modified to represent 10 columns of same excel file row
 
 @Entity
 @Table(name = "user_data")
 public class UserFileRow {
 
     @Id
+    //Sequecse generating strategy increases the performance of batch operation
     @GeneratedValue(strategy = SEQUENCE, generator = "seqGen")
     @SequenceGenerator(name = "seqGen", sequenceName = "seq", initialValue = 1)
     private Long id;

@@ -1,5 +1,6 @@
 package com.javaReactJsUploadAndStore.utils;
 
+//Simple util to measure time
 public abstract class performanceTime {
 
     static long startTime;
