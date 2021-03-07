@@ -1,22 +1,18 @@
 package com.javaReactJsUploadAndStore.service;
 
-import com.javaReactJsUploadAndStore.entity.UserFile;
+import com.javaReactJsUploadAndStore.entity.UserFileRow;
 import com.javaReactJsUploadAndStore.repo.USerFileDBRepository;
-import org.apache.commons.io.IOUtils;
+import com.javaReactJsUploadAndStore.utils.ExcelReadHelper;
+import com.javaReactJsUploadAndStore.utils.performanceTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.net.URI;
-import java.nio.charset.StandardCharsets;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.List;
 
 @Service
-public class UserFileDBService {
+public class UserFileDBService extends performanceTime {
 
 
     @Autowired
@@ -26,18 +22,19 @@ public class UserFileDBService {
         this.uSerFileDBRepository = uSerFileDBRepository;
     }
 
-    public UserFile storeService (MultipartFile file) throws IOException {
 
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+    public void storeService (MultipartFile file) throws IOException {
 
-        //Any operations with stream or string that required in business logic
-        String doSomthingWithThisData = IOUtils.toString(file.getInputStream(), StandardCharsets.UTF_8);
+        try {
+            List<UserFileRow> tutorials = ExcelReadHelper.excelToUserFileRowObject(file.getInputStream());
+            uSerFileDBRepository.saveAll(tutorials);
+            finishTime();
+            howLongItTakes();
+        } catch (IOException e) {
+            throw new RuntimeException("fail to store excel data: " + e.getMessage());
+        }
 
-        UserFile fileDB = new UserFile(fileName, file.getContentType(), file.getBytes());
-
-        return uSerFileDBRepository.save(fileDB);
     }
-
 
 
 }
